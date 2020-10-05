@@ -1,0 +1,159 @@
+---
+title: ''
+output: pdf_document
+---
+
+#*Codigo*
+
+```{r eval=FALSE}
+
+library(BayesNI)
+library(bayesm)
+library(pander)
+library(MASS)
+
+set.seed(123)
+##### suponiendo que aca ya unimos por medio de la moda las 5 encuestas, procedemos a 
+##### calcular ganancia bruta
+
+#muestra 1
+x1<-seq(1,30,length(30))
+h1<-c(rep(0,20),2,3,4,5,6,7,8,7,5,5)
+prob_estatura1 <- h1/sum(h1)
+#muestra 2 Andres
+x2<-seq(1,44,length(44))
+h2<-c(rep(0,35),1,4,6,8,6,3,1,1,0)
+prob_estatura2 <- h2/sum(h2)
+#muestra 3 Carlos
+x3<-seq(1,30,length(30))
+h3<-c(rep(0,19),2,4,6,8,6,5,4,4,1,0,0)
+prob_estatura3 <- h3/sum(h3)
+#muestra 4
+x4<-seq(1,22,length(22))
+h4<-c(rep(0,12),1,2,2,3,5,7,8,8,2,1)
+prob_estatura4 <- h4/sum(h4)
+#muestra 5
+x5<-seq(1,30,length(30))
+h5<-c(rep(0,22),2,4,8,4,2,1,1,0)
+prob_estatura5 <- h5/sum(h5)
+#muestra 6
+x6<-seq(1,37,length(37))
+h6<-c(rep(0,27),2,4,7,8,6,4,1,1,0,0)
+prob_estatura5 <- h6/sum(h6)
+
+muestra1 <-sample(x1,10000,prob=h1, replace=T) #muestra 1
+muestra2 <-sample(x2,10000,prob=h2, replace=T) #muestra 2 Andres
+muestra3 <-sample(x3,10000,prob=h3, replace=T) #muestra 3 Carlos
+muestra4 <-sample(x4,10000,prob=h4, replace=T) #muestra 4
+muestra5 <-sample(x5,10000,prob=h5, replace=T) #muestra 5
+muestra6 <-sample(x6,10000,prob=h6, replace=T) #muestra 6
+
+fitdistr(muestra1,"Gamma")
+fitdistr(muestra2,"Gamma")
+fitdistr(muestra3,"Gamma")
+fitdistr(muestra4,"Gamma")
+fitdistr(muestra5,"Gamma")
+fitdistr(muestra6,"Gamma")
+
+muestra<-c(1,2,3,4,5,6)
+Shape<-c(113.59333264, 635.4533812, 130.91661318, 75.40795911, 299.241646, 352.6279400)
+Rate<-c(4.34378538, 16.2688144, 5.52330204, 4.15027391, 11.822126, 11.3802711)
+tabla<-data.frame(muestra,Shape,Rate)
+colnames(tabla)<-c("Muestra","Alfa","Beta")
+pander(tabla)
+
+x<-seq(10,50,length=1000)
+
+#muestra 2 Andres
+plot(density(muestra2,bw=2),xlim=c(10,50),ylim=c(0,0.3),col="gray",lwd=2, main = "Ganancias Brutas de taxi", xlab="Ganancias (en cientos de miles de pesos colombianos)",ylab="Densidad", las=1)
+#muestra 1 propia
+y1<-dgamma(x, shape = 113.59333264, rate = 4.34378538)
+lines(x,y1,lwd=2,col="gray")
+#muestra 3 carlos
+y3<-dgamma(x, shape = 130.91661318, rate = 5.52330204)
+lines(x,y3,lwd=2,col="gray")
+#muestra 4
+y4<-dgamma(x, shape = 75.40795911, rate = 4.15027391)
+lines(x,y4,lwd=2,col="gray")
+#muestra 5
+y5<-dgamma(x, shape = 299.241646, rate = 11.822126)
+lines(x,y5,lwd=2,col="gray")
+#muestra 6
+y6<-dgamma(x, shape = 352.6279400, rate = 11.3802711)
+lines(x,y6,lwd=2,col="gray")
+#muestra BRUTO GENERAL
+y7<-dgamma(x, shape = 194.3575, rate = 6.203293)
+lines(x,y7,lwd=2, type="l",pch=3,lty=2)
+
+##### suponiendo que aca ya unimos por medio de la moda las 5 encuestas, procedemos a 
+##### calcular ganancia neta
+
+#muestra 1
+x1G<-seq(1,20,length(20))
+h1G<-c(rep(0,10),2,6,7,8,7,6,2,0,0,0)
+prob_estatura1G <- h1G/sum(h1G)
+#muestra 2 Andres
+x2G<-seq(1,30,length(30))
+h2G<-c(rep(0,22),2,4,6,8,7,6,4,0)
+prob_estatura2G <- h2G/sum(h2G)
+#muestra 3 Carlos
+x3G<-seq(1,20,length(20))
+h3G<-c(rep(0,11),1,2,4,5,8,4,1,0,0)
+prob_estatura3G <- h3G/sum(h3G)
+#muestra 4
+x4G<-seq(1,18,length(18))
+h4G<-c(rep(0,8),2,4,6,8,5,1,0,0,0,0)
+prob_estatura4G <- h4G/sum(h4G)
+#muestra 5
+x5G<-seq(1,20,length(20))
+h5G<-c(rep(0,13),1,2,4,8,8,4,1)
+prob_estatura5G <- h5G/sum(h5G)
+#muestra 6
+x6G<-seq(1,23,length(23))
+h6G<-c(rep(0,16),1,2,4,8,8,4,1)
+prob_estatura6G <- h6G/sum(h6G)
+
+muestra1G <-sample(x1G,10000,prob=h1G, replace=T) #muestra 1
+muestra2G <-sample(x2G,10000,prob=h2G, replace=T) #muestra 2 Andres
+muestra3G <-sample(x3G,10000,prob=h3G, replace=T) #muestra 3 Carlos
+muestra4G <-sample(x4G,10000,prob=h4G, replace=T) #muestra 4
+muestra5G <-sample(x5G,10000,prob=h5G, replace=T) #muestra 5
+muestra6G <-sample(x6G,10000,prob=h6G, replace=T) #muestra 6
+
+fitdistr(muestra1G,"Gamma")
+fitdistr(muestra2G,"Gamma")
+fitdistr(muestra3G,"Gamma")
+fitdistr(muestra4G,"Gamma")
+fitdistr(muestra5G,"Gamma")
+fitdistr(muestra6G,"Gamma")
+
+muestra<-c(1,2,3,4,5,6)
+Shape<-c(77.23917074, 248.333438, 115.0638914, 83.1787266, 161.4714715, 220.131341)
+Rate<-c(5.51690540, 9.459096, 7.5109811, 7.2135009, 9.3398326, 10.856370)
+tabla<-data.frame(muestra,Shape,Rate)
+colnames(tabla)<-c("Muestra","Alfa","Beta")
+pander(tabla)
+
+#muestra 2 Andres
+plot(density(muestra2G,bw=2),xlim=c(0,40),ylim=c(0,0.35),col="gray",lwd=2, main = "Ganancias Netas de taxi", xlab="Ganancias (en cientos de miles de pesos colombianos)",ylab="Densidad", las=1)
+#muestra 1
+x<-seq(0,40,length=1000)
+y1<-dgamma(x, shape = 77.23917074, rate = 5.51690540)
+lines(x,y1,lwd=2,col="gray")
+#muestra 3
+y3<-dgamma(x, shape = 115.0638914, rate = 7.5109811)
+lines(x,y3,lwd=2,col="gray")
+#muestra 4
+y4<-dgamma(x, shape = 83.1787266, rate = 7.2135009)
+lines(x,y4,lwd=2,col="gray")
+#muestra 5
+y5<-dgamma(x, shape = 161.4714715, rate = 9.3398326)
+lines(x,y5,lwd=2,col="gray")
+#muestra 6
+y6<-dgamma(x, shape = 220.131341, rate = 10.856370)
+lines(x,y6,lwd=2,col="gray")
+#muestra NETO GENERAL
+y7<-dgamma(x, shape = 181.0836, rate = 8.316114)
+lines(x,y7,lwd=2, type="l",pch=3,lty=2)
+
+```
