@@ -7,7 +7,11 @@ Actividad Clase Estadistica Bayesiana
 
 **Diseño de experimento:**
 
+Se realizo un panel de expertos con 5 taxistas, en la cual se les hizo ciertas preguntas, y dado su conocimiento cuanto serian las ganancias de un taxista promedio.
+
 # Objetivo
+
+Conocer la distribucion y las ganancias promedio de un taxista.
 
 # Resultados y conclusiones
 
@@ -54,6 +58,8 @@ De esta forma se obtienen las distribuciones apriori de los datos obtenidos de l
 Figura 3: Grafico distribución ganancias taxistas.
 
 ![alt text](https://github.com/oecorrechag/Proyecto-taxi/blob/main/Grafico_3.png)
+
+Nota: En el archivo R se desarrolla la obtencion de los parametros. En el archivo Python se obtienen los graficos.
 
 ### Bibliografia
 
